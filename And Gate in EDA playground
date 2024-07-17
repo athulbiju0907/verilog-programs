@@ -1,15 +1,15 @@
 // Code your design here
-module org(output y,input a,b);
+module andg(output y,input a,b);
   assign y=a&b;
 endmodule
 
 //testbench
-module org_tb;
+module andg_tb;
   
   reg a1,b1;
   wire y1;
   
-  org org_tb(.a(a1),.b(b1),.y(y1)); //instantiation
+  andg andg_tb(.a(a1),.b(b1),.y(y1)); //instantiation
   initial begin //procedural assignment
     $dumpfile("dump.vcd");
     $dumpvars(1);
