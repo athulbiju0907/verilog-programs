@@ -1,0 +1,34 @@
+// Code your design here
+module halfadder(output sum,carry,input a,b);
+  assign sum=a^b;  //continuous assignment and dataflow model
+  assign carry=a&b; 
+endmodule
+
+
+//testbench
+module halfadder_tb;
+  reg a1,b1;
+  wire sum1,carry1;
+  integer i;
+  halfadder halfadder_tb(.a(a1),.b(b1),.carry(carry1),.sum(sum1));
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(1);
+    $monitor(a1,b1,sum1,carry1);
+    a1=1'b0;
+    b1=1'b0;
+    #10; //delay
+    a1=1'b0;
+    b1=1'b1;
+    #10;
+    a1=1'b1;
+    b1=1'b0;
+    #10;
+    a1=1'b1;
+    b1=1'b1;
+    #10;
+
+  end
+    
+  
+endmodule
