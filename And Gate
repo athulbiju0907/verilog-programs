@@ -1,5 +1,2 @@
-module andg(output y,input a,b);
-  
-  assign y=a&b; //dataflow model
-  
-endmodule
+jj
+jj
