@@ -4,12 +4,12 @@ module fadder_tb;
   integer i;
   fadderg fadder_tb(.s(s),.cout(cout),.a(a),.b(b),.cin(cin));
   initial begin
-    a=0;
+    a=0;//initializing all signals to zero
     b=0;
     cin=0;
     $dumpfile("dump.vcd");
    // $dumpvars(1);
-    $dumpvars(1, fadder_tb);
+    $dumpvars(1, fadder_tb);//to avoid displaying i in the waveform
 
     for(i=0;i<8;i++)
       begin
