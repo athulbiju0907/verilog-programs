@@ -1,0 +1,33 @@
+//gate level model
+module FS(input a,b,bin, output diff,bout);
+ wire w1, w2, w3;
+ xor (w1, a, b);
+ xor (diff, w1, bin);
+ and (w2, ~a, b);
+ and (w3, w1, bin);
+ or (bout, w2, w3);
+endmodule
+
+//dataflow model
+module Fs( input a,b, bin, output diff, bout);
+assign diff=a^b^bin;
+assign bout=(~a&b)|(b&bin)|(~a&bin);
+endmodule
+
+//testbench
+module test_FS();
+reg a,b,bin;
+wire diff, bout;
+FS fs0(.a(a),.b(b),.bin(bin), .diff(diff),.bout(bout));
+initial begin
+a=1'b1; b=1'b1; bin=1'b0;
+#10;
+a=1'b0; b=1'b1; bin=1'b0;
+#10;
+a=1'b0; b=1'b1; bin=1'b1;
+#10;
+a=1'b1; b=1'b1; bin=1'b1;
+#200;
+$finish();
+end
+endmodule
