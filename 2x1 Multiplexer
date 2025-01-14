@@ -1,0 +1,32 @@
+//gate level model
+module mux2x1(input a,b,s, output y);
+wire w1,w2,w3;
+not(w1,s);
+and(w2,w1,a);
+and(w3,s,b);
+or(y,w2,w3);
+endmodule
+
+//dataflow model
+module mux2x1(input a,b,s, output y);
+assign y=s?b:a;
+endmodule
+
+//testbench
+module tb_mux2x1;
+ reg a, b, s;
+ wire y;
+ mux2x1 uut (.a(a), .b(b), .s(s), .y(y));
+ initial begin
+ $monitor("a=%b, b=%b, s=%b | y=%b", a, b, s, y);
+ a = 0; b = 0; s = 0; #10;
+ a = 0; b = 0; s = 1; #10;
+ a = 0; b = 1; s = 0; #10;
+ a = 0; b = 1; s = 1; #10;
+ a = 1; b = 0; s = 0; #10;
+ a = 1; b = 0; s = 1; #10;
+ a = 1; b = 1; s = 0; #10;
+ a = 1; b = 1; s = 1; #10;
+ $finish;
+ end
+endmodule
