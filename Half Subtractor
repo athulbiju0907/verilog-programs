@@ -1,0 +1,24 @@
+// gate level model
+module HS (input a, b, output diff, bout);
+xor(sum,a,b);
+and(c,~a,b);
+endmodule
+
+//data flow model
+module HS (input a, b, output diff, bout);
+assign diff =a^b;
+assign bout= ~a&b ;
+endmodule
+
+//testbench
+module tb_HS;
+ reg a, b;
+ wire diff, bout;
+ HS uut (.a(a), .b(b), .diff(diff), .bout(bout));
+ initial begin
+ $monitor("a=%b, b=%b, diff=%b, bout=%b", a, b, diff, bout);
+ a = 0; b = 0; #10;
+ a = 0; b = 1; #10;
+ a = 1; b = 0; #10;
+ a = 1; b = 1; #10;
+ $finish;
