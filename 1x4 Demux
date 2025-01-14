@@ -1,0 +1,32 @@
+//gate level model
+module demux1x4(input [1:0] s, output [3:0] y);
+ wire w0, w1;
+ not (w0, s[0]);
+ not (w1, s[1]);
+ and (y[0], w0, w1);
+ and (y[1], s[0], w1);
+ and (y[2], w0, s[1]);
+ and (y[3], s[0], s[1]);
+endmodule
+
+//dataflow model
+module demux1x4(input [1:0]s,output [3:0]y);
+assign y[0]=(~s[0]&~s[1]);
+assign y[1]=(s[0]&~s[1]);
+assign y[2]=(~s[0]&s[1]);
+assign y[3]=(s[0]&s[1]);
+endmodule
+
+//testbench
+module tb_dem1x4();
+reg [1:0]s;
+wire [3:0]y;
+demux1x4 uut(.s(s),.y(y));
+initial begin
+s=2'b00;#10;
+s=2'b01;#10;
+s=2'b10;#10;
+s=2'b11;#10;
+$finish;
+end
+endmodule
