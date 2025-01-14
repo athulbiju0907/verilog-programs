@@ -1,0 +1,56 @@
+//gate level model
+module decoder_3x8(input [2:0] a, input en, output [7:0] y);
+ wire enb, a0, a1, a2;
+ not (enb, en);
+ not (a0, a[0]);
+ not (a1, a[1]);
+ not (a2, a[2]);
+ and (y[0], enb, a0, a1, a2);
+ and (y[1], enb, a0, a1, a[2]);
+ and (y[2], enb, a0, a[1], a2);
+ and (y[3], enb, a0, a[1], a[2]);
+ and (y[4], enb, a[0], a1, a2);
+ and (y[5], enb, a[0], a1, a[2]);
+ and (y[6], enb, a[0], a[1], a2);
+ and (y[7], enb, a[0], a[1], a[2]);
+endmodule
+
+//dataflow model
+module decoder_3x8_dataflow(Y,EN,A);
+output [7:0]Y;
+input [2:0]A;
+input EN;
+wire [1:0]D;
+wire A3=1'b0;
+assign D[0]=EN & ~A3 & ~A[2];
+assign D[1]=EN & ~A3 & A[2];
+assign Y[0]=D[0] & ~A[1] & ~A[0];
+assign Y[1]=D[0] & ~A[1] & A[0];
+assign Y[2]=D[0] & A[1] & ~A[0];
+assign Y[3]=D[0] & A[1] & A[0];
+assign Y[4]=D[1] & ~A[1] & ~A[0];
+assign Y[5]=D[1] & ~A[1] & A[0];
+assign Y[6]=D[1] & A[1] & ~A[0];
+assign Y[7]=D[1] & A[1] & A[0];
+endmodule
+
+//testbench
+module tb_dec3x8;
+ reg [2:0] a;
+ reg en;
+ wire [7:0] y;
+ decoder_3x8 uut (.a(a), .en(en), .y(y));
+ initial begin
+ $monitor("Time=%0t | a=%b, en=%b | y=%b", $time, a, en, y);
+ en = 1;
+ a = 3'b000; #10;
+ a = 3'b001; #10;
+ a = 3'b010; #10;
+ en = 0;
+ a = 3'b000; #10;
+ a = 3'b001; #10;
+ a = 3'b010; #10;
+ a = 3'b011; #10;
+ $finish;
+ end
+endmodule
