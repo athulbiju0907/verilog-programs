@@ -1,0 +1,37 @@
+//gate level model
+module mux_4x1(I0,I1,I2,I3,S0,S1,out);
+input I0,I1,I2,I3,S0,S1;
+output out;
+wire w1,w2,w3,w4,w5,w6;
+not (w1,S0);
+not (w2,S1);
+and (w3,w1,w2,I0);
+and (w4,w1,S1,I1);
+and (w5,w2,S0,I2);
+and (w6,S0,S1,I3);
+or (out,w3,w4,w5,w6);
+endmodule
+
+//dataflow model
+module mux4x1 (a,s,y);
+output y;
+input [3:0]a;
+input [1:0]s;
+assign y= s[1]?(s[0]?a[3]:a[2]):(s[0]?a[1]:a[0]);
+endmodule
+
+//testbench
+module tb_mux4x1;
+ reg I0,I1,I2,I3;
+ reg S0,S1;
+ wire out;
+ mux4x1 uut(,I0(I0),.I1(I1),.I2(I2),.I3(I3),S0(S0),.S1(S1));
+ initial begin
+ I0=0;I1=0;I2=1;I3=1; #10;
+ I0=1;I1=0;I2=1;I3=1; #10;
+ I0=0;I1=1;I2=1;I3=1; #10;
+ I0=1;I1=0;I2=0;I3=1; #10;
+ I0=0;I1=0;I2=1;I3=0; #10;
+ $finish;
+ end
+endmodule
