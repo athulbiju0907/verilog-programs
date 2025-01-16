@@ -1,0 +1,89 @@
+//gate level modelling of an array multiplier
+module array_mul(input [3:0] a, b, output [7:0] p);
+ wire w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15;
+ wire h0, h1, h2, h3;
+ wire s1, s2;
+ wire x1, x2, x4, x5, f0, f1, f2, f3, f4, f5, f6;
+ wire x1_1, x1_2, x2_1, x2_2, x2_3, x3_1, x3_2, x3_3;
+ wire x4_1, x4_2, x4_3, x5_1, x5_2, x5_3;
+ wire x6_1, x6_2, x6_3, x7_1, x7_2, x7_3;
+ wire x8_1, x8_2, x8_3;
+ and (p[0], a[0], b[0]);
+ and (w1, a[1], b[0]);
+ and (w2, a[2], b[0]);
+ and (w3, a[3], b[0]);
+ and (w4, a[0], b[1]);
+ and (w5, a[1], b[1]);
+ and (w6, a[2], b[1]);
+ and (w7, a[3], b[1]);
+ and (w8, a[0], b[2]);
+ and (w9, a[1], b[2]);
+ and (w10, a[2], b[2]);
+ and (w11, a[3], b[2]);
+ and (w12, a[0], b[3]);
+ and (w13, a[1], b[3]);
+ and (w14, a[2], b[3]);
+ and (w15, a[3], b[3]);
+ xor (p[1], w4, w1);
+ and (h0, w4, w1);
+
+ xor (s1, w5, w2);
+ and (h1, w5, w2);
+
+ xor (s2, w6, w3);
+ and (h2, w6, w3);
+ xor (x1_1, w8, s1);
+ xor (p[2], x1_1, h0);
+ and (x1_2, w8, s1);
+ and (x1_3, x1_1, h0);
+ or (f0, x1_2, x1_3);
+ xor (x2_1, w9, s2);
+ xor (x1, x2_1, h1);
+ and (x2_2, w9, s2);
+ and (x2_3, x2_1, h1);
+ or (f1, x2_2, x2_3);
+ xor (x3_1, w10, w7);
+ xor (x2, x3_1, h2);
+ and (x3_2, w10, w7);
+ and (x3_3, x3_1, h2);
+ or (f2, x3_2, x3_3);
+ xor (x4_1, w12, x1);
+ xor (p[3], x4_1, f0);
+ and (x4_2, w12, x1);
+ and (x4_3, x4_1, f0);
+ or (f3, x4_2, x4_3);
+ xor (x5_1, w13, x2);
+ xor (x4, x5_1, f1);
+ and (x5_2, w13, x2);
+ and (x5_3, x5_1, f1);
+ or (f4, x5_2, x5_3);
+ xor (x6_1, w14, w11);
+ xor (x5, x6_1, f2);
+ and (x6_2, w14, w11);
+ and (x6_3, x6_1, f2);
+ or (f5, x6_2, x6_3);
+ xor (x7_1, f4, x5);
+ xor (p[5], x7_1, h3);
+ and (x7_2, f4, x5);
+ and (x7_3, x7_1, h3);
+ or (f6, x7_2, x7_3);
+ xor (x8_1, f5, w15);
+ xor (p[6], x8_1, f6);
+ and (x8_2, f5, w15);
+ and (x8_3, x8_1, f6);
+ or (p[7], x8_2, x8_3);
+endmodule
+
+//TESTBENCH
+module array_mul_tb();
+reg [3:0]a,b;
+wire [7:0]p;
+array_mul a1 (.a(a),.b(b),.p(p));
+initial begin
+a=4'b0111; b=4'b0101;
+#200;
+a=4'b0010; b=4'b0010;
+#200;
+$finish();
+end
+endmodule
