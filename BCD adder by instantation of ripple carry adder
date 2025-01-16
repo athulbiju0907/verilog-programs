@@ -1,0 +1,41 @@
+//BCD ADDER BY INSTANTIATING THE RIPPLE CARRY ADDER MODULE
+module bcd_adder(A,B, Sum, Cout);
+ input [3:0] A,B;
+ output [3:0] Sum;
+ output Cout;
+ wire w1,w4,w5;
+ wire [3:0] w2, w3;
+
+ assign w3[0]=1'b0;
+ assign w3[3]=1'b0;
+ assign w3[1]=Cout;
+ assign w3[2]=Cout;
+ rca_4bit R0(.a(A),.b(B),.sum(w2),.cout(w1));
+ rca_4b R1(.a(w2),.b(w3),.sum(Sum),.cout());
+ and(w4,w2[2],w2[3]);
+ and(w5,w2[3],w3[1]);
+
+ or(Cout,w1,w4,w5);
+endmodule
+
+//TESTBENCH
+module test_bcd_adder();
+wire [3:0] Sum;
+ wire cout;
+ reg [3:0] A, B;
+ bcd_adder (A, B, Sum, Cout);
+ initial
+ begin
+ A = 4'b0000; B = 4'b0000; cin = 0;
+ #10;
+ A = 4'b0001; B = 4'b0010; cin = 0;
+ #10;
+ A = 4'b0101; B = 4'b0101; cin = 1;
+ #10;
+ A = 4'b1001; B = 4'b0001; cin = 0;
+ #10;
+ A = 4'b1000; B = 4'b1000; cin = 1;
+ #10;
+ $stop;
+ end
+ endmodule
