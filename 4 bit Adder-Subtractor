@@ -1,0 +1,48 @@
+module as_4b(input [3:0]a,b,input cin,output [3:0]sum, output cout);
+wire w1, w2, w3,w4,w5,w6,w7,w8,w9,w10,w11,w12;
+wire b0,b1,b2,c0,c1,c2;
+ xor (b0,cin,b[0]);
+ xor (w1, a[0], b0);
+ xor (sum[0], w1, cin);
+ and (w2, a[0], b0);
+ and (w3, w1, cin);
+ or (c0, w2, w3);
+ xor (b1,cin,b[1]);
+ xor (w4, a[1], b1);
+ xor (sum[1], w4, c0);
+ and (w5, a, b1);
+ and (w6, w4, c0);
+ or (c1, w5, w6);
+ xor (b2,cin,b[2]);
+ xor (w7, a[2], b2);
+ xor (sum[2], w7, c1);
+ and (w8, a[2], b2);
+ and (w9, w7, c1);
+ or (c2, w8, w9);
+xor (b3,cin,b[3]);
+ xor (w10, a[3], b3);
+ xor (sum[3], w10, c2);
+ and (w11, a[3], b3);
+ and (w12, w10, c2);
+ or (cout, w12, w11);
+endmodule
+
+//TESTBENCH
+module tb_as4b();
+reg [3:0]a,b;
+reg cin;
+wire [3:0]sum;
+wire cout;
+as_4b dut0(.a(a),.b(b),.cin(cin), .sum(sum),.cout(cout));
+initial begin
+a=4'b1001; b=4'b1010; cin=1'b0;
+#10;
+a=4'b1011; b=4'b1010; cin=1'b1;
+#10;
+a=4'b1001; b=4'b1111; cin=1'b0;
+#10;
+a=4'b1011; b=4'b1110; cin=1'b1;
+#200;
+$finish();
+end
+endmodule
