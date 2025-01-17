@@ -1,0 +1,39 @@
+//UNIVERSAL SHIFT REGISTER
+module usr(input clk,rst,input [1:0]S, output reg[3:0]q);
+always @(posedge clk or posedge rst)
+begin
+if (rst)
+q<=4'b1010;
+else
+//q<=4'b1010;
+begin
+case(S)
+2'b00: q<=q;
+2'b01: q<={q[2:0],q[3]};
+2'b10: q<={q[0],q[3:1]};
+2'b11: q<=4'b1001;
+endcase
+end
+end
+endmodule
+
+//TESTBENCH
+module tb_usr();
+reg clk,rst; reg [1:0]S;
+wire [3:0]q;
+usr u1(clk,rst,S,q);
+always
+#5 clk=~clk;
+initial
+begin
+rst=1; clk=1; S=2'b00;
+#10; rst=0; S=2'b00;
+#10; S=2'b10;
+#10; S=2'b11;
+#10; S=2'b01;
+#10; S=2'b01;
+#10; S=2'b10;
+#10; rst=1;
+#10; $stop;
+end
+endmodule
