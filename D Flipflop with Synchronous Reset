@@ -1,0 +1,30 @@
+//Synchronous Reset D Flipflop
+module dff_sync(input d,clk,rst,output reg q);
+always @(posedge clk)
+begin
+if(rst)
+q<=1'b0;
+else
+begin
+q<=d;
+end
+end
+endmodule
+
+//TESTBENCH
+module tb_dff();
+reg d,clk,rst;
+wire q;
+dff_sync d1(d,clk,rst,q);
+always
+#5 clk=~clk;
+initial
+begin
+clk=1; rst=1; d=0;
+#10 rst=0; #10 d=0;
+#10 d=1;
+#10 d=0;
+#10 d=1;
+#10 $stop;
+end
+endmodule
