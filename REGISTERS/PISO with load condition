@@ -1,0 +1,33 @@
+//PARALLEL IN – SERIAL OUT (PISO)
+module piso_4b (input clk,rst,load,input [3:0]i,output so);
+reg [3:0]q;
+always @ (posedge clk or posedge rst)
+begin
+if (rst)
+q<=4'b0;
+else if (load)
+q<=i;
+else
+q<={1'b0,q[3:1]};
+end
+assign so=q[0];
+endmodule
+
+//TESTBENCH
+module tb_piso();
+reg [3:0]i;
+reg clk,rst,load;
+wire so;
+piso_4b p1(clk,rst,load,i,so);
+always
+#5 clk=~clk;
+initial
+begin
+rst=1; clk=1; i=4'b0101; load=1;
+#10; rst=0; load=0;
+#10; load=1; i=4'b0111;
+#10; load=0;
+#40; load=1; i=4'b1011; #10; load=0;
+#50; $stop;
+end
+endmodule
