@@ -1,0 +1,39 @@
+//SERIAL IN – PARALLEL OUT (SIPO)
+module sipo_4b(input clk,rst,si,output reg [3:0]so);
+always @(posedge clk or posedge rst)
+begin
+if(rst)
+begin
+so <= 4'b0;
+end
+else
+so<={si,so[3:1]};
+end
+endmodule
+
+//TESTBENCH
+module tb_sipo();
+reg si,clk,rst;
+wire so;
+sipo_4b s1(clk,rst,si,so);
+always
+#5 clk=~clk;
+initial
+begin
+rst=1; clk=1; si=0;
+#10 rst=0; si=1;
+#10; si=0;
+#10; si=1;
+#10; si=0;
+#10; si=1;
+#10; si=0;
+#10; si=1;
+#10; si=0;
+#10; si=1;
+#10; si=0;
+#10; si=1;
+#10; si=0;
+#10; si=1;
+#10; $stop;
+end
+endmodule
