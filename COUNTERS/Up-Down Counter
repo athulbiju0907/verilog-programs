@@ -1,0 +1,33 @@
+module up_downcounter(input clk,rst,updown, output reg [3:0] count);
+always @(posedge clk or posedge rst) begin
+if(rst)
+count <= 4'b0;
+else if(updown)
+count <= count+ 4'b0001;
+else
+count <= count- 4'b0001;
+end
+endmodule
+
+//TESTBENCH
+module tb_updown() ;
+reg clk,rst,updown;
+wire [3:0]count ;
+initial begin
+clk=0;
+end
+up_downcounter dut(clk,rst,updown,count);
+always
+#5 clk=~clk;
+initial
+begin
+rst=1; clk=0; updown=1;
+#10; rst=0; updown=1;
+#50; updown=0;
+#60; updown=1;
+#50; updown=0;
+#100; updown=1;
+#10; rst=1;
+#200; $stop;
+end
+endmodule
