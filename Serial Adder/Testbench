@@ -1,0 +1,12 @@
+module tb_sadder();
+reg clk,rst;
+reg [3:0]a,b;
+wire [3:0]sum;
+sadder dut(clk,rst,a,b,sum);
+always #5 clk=~clk;
+initial begin
+clk=0; rst=1;
+#10;rst=0;a=1000;b=0001;
+#200 $stop();
+end
+endmodule
