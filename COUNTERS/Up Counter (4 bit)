@@ -1,0 +1,25 @@
+module upcounter(input clk,rst ,output reg [3:0]q);
+always @(posedge clk or posedge rst)
+begin
+if(rst)
+q<=4'b0;
+else
+q<=q+1;
+end
+endmodule
+
+//TESTBENCH
+module tb_upcounter();
+reg clk,rst;
+wire [3:0]q;
+upcounter dut(clk,rst,q);
+always
+#5 clk=~clk;
+initial
+begin
+rst=1; clk=0;
+#10; rst=0;
+#100; rst=1;
+#200; $stop;
+end
+endmodule
