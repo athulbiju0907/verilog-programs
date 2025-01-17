@@ -1,0 +1,30 @@
+//SERIAL IN - SERIAL OUT (SISO)
+module siso_4b(input clk,rst,input si,output so);
+reg [3:0]q;
+always@(posedge clk or posedge rst) begin
+if(rst)
+q <= 4'b0;
+else
+q <= {si,q[3:1]};
+end
+assign so=q[0];
+endmodule
+
+//TESTBENCH
+module tb_siso();
+reg clk,rst;
+reg si;
+wire so;
+siso_4b dut(clk,rst,si,so);
+always #5 clk=~clk;
+initial
+begin
+rst=1; clk=0; si=0;
+#10 rst=0; si=0;
+#10; si=1;
+#10; si=1;
+#10; si=0;
+#10; si=1;
+#10; $stop;
+end
+endmodule
