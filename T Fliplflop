@@ -1,0 +1,37 @@
+//Synchronous T Flipflop
+module tff_sync(input t,clk,rst,output reg q);
+always @(posedge clk)
+begin
+if(rst)
+q<=1'b0;
+else
+begin
+if(t)
+q <= ~q;
+else begin
+q <= q;
+end
+end
+end
+endmodule
+
+//TESTBENCH
+module tb_tff();
+reg t,clk,rst;
+wire q;
+tff_sync dut(t,clk,rst,q);
+always
+#5 clk=~clk;
+initial
+begin
+clk=1; rst=1; t=0;
+#10; rst=0;
+#10; t=1;
+#10; t=0;
+#10; t=1;
+#10; t=0;
+#10; rst=1;
+#10; t=1;
+#10; $stop;
+end
+endmodule
