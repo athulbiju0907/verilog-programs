@@ -1,0 +1,70 @@
+module Traffic_controller(input clk,rst,output reg [1:0]main,side);
+reg [1:0]ps,ns;
+parameter s0=2'b00;
+parameter s1=2'b01;
+parameter s2=2'b10;
+parameter s3=2'b11;
+
+parameter green_time=4'd10;
+parameter yellow_time=4'd5;
+reg[4:0]counter;
+
+parameter green=2'b00;
+parameter yellow=2'b01;
+parameter red=2'b10;
+
+//sequential logic
+always @(posedge clk or posedge rst) begin
+if(rst)
+begin
+ps<=s0;
+counter<=4'd0;
+end
+
+else begin
+	if(counter == ( ps == s0 || ps == s2 ? green_time : yellow_time)) begin
+	ps<=ns;
+	counter<=4'd0;
+	end
+
+	else begin
+	counter<=counter+1;
+	end
+end
+
+end
+
+//ns logic and output logic
+always @(ps) begin
+case(ps)
+
+s0:begin
+	ns = s1;
+	main = green; 
+	side = red;
+	end
+
+s1:begin
+	ns = s2;
+	main = yellow;
+	side = red;
+	end
+	
+s2:begin
+	ns = s3;
+	main = red;
+	side = green;
+	end
+	
+s3:begin
+	ns = s0;
+	main = red;
+	side = yellow;
+	end
+
+endcase
+end
+
+endmodule
+
+//Testbench
