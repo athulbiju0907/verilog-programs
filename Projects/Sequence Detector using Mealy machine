@@ -1,0 +1,80 @@
+module seq_1001mealy(input i,clk,rst, output reg y);
+reg [1:0]ps,ns;
+parameter s0=2'b00;
+parameter s1=2'b01;
+parameter s2=2'b10;
+parameter s3=2'b11;
+
+//nextstage and output logic combinational
+
+always @(i or ps) begin
+y=1'b0;
+case(ps)
+
+	s0: begin
+		 if(i)
+			ns=s1;
+		 else
+			ns=s0;
+		 end
+
+		 
+	s1: begin
+		 if(i)
+			ns=s1;
+		 else
+			ns=s2;
+		 end
+		
+	s2: begin
+		 if(i)
+			ns=s1;
+		 else
+			ns=s3;
+		 end
+
+	s3: begin
+		 if(i) begin
+		   y=1'b1; //output become 1
+			ns=s1;
+			end
+		 else
+			ns=s0;
+		 end
+	default: y=1'b0;
+
+endcase
+end
+
+//sequential logic
+
+always @(posedge clk or posedge rst) begin
+if(rst)
+ps <= s0;
+else
+ps <= ns;
+end
+endmodule
+
+//Testbench
+module tb_seq_1001mealy();
+wire y;
+reg i,clk,rst;
+
+seq_1001mealy s(i,clk,rst,y);
+
+always #10 clk=~clk;
+
+initial begin
+clk=0; rst=1;i=1;
+#15; rst=0;
+#30; i=0;
+#40; i=1;
+#20; i=0;
+#40; i=1;
+
+
+//$monitor("input : %b , ps : %d , ns : %d , output : %b",i,ps,ns,y);
+#10 $stop;
+end
+endmodule
