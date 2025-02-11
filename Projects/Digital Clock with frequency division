@@ -1,0 +1,82 @@
+module dig_clock(
+    input clk, rst,
+    output reg [5:0] sec, min,
+    output reg [4:0] hour
+);
+ /*   // Using a 50 MHz clock
+    reg [31:0] fvalue;
+    wire fpulse;
+
+    // Frequency division to generate 1-second pulse from 50 MHz clock
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            fvalue <= 32'b0;
+        else if (fvalue == 49999999)
+            fvalue <= 32'b0;
+        else
+            fvalue <= fvalue + 1;
+    end
+
+    assign fpulse = (fvalue == 49999999) ? 1'b1 : 1'b0;
+	 
+	 */
+
+always @(posedge clk) //if you need clock division , use always @(posedge fpulse)
+begin
+if (rst)
+begin sec <= 6'b000000; min <= 6'b000000; hr <= 5'b00000;
+end
+else
+begin
+if (sec == 59) begin
+sec <= 6'b000000;
+if (min == 59) begin
+min <= 6'b000000;
+if (hr == 23)
+begin hr <= 5'b00000;
+end
+else begin
+hr <= hr + 5'b00001;
+end
+end
+else begin
+min <= min + 6'b000001;
+end
+end
+else begin sec <= sec + 6'b000001;
+end
+end
+end
+endmodule
+
+//Testbench
+module tb_dig_clock;
+  reg clk, rst;
+  wire [5:0] sec, min;
+  wire [4:0] hr;
+
+  digital_clock dut (
+    .clk(clk),
+    .rst(rst),
+    .sec(sec),
+    .min(min),
+    .hr(hr)
+  );
+
+  always #5 clk = ~clk;
+
+  initial begin
+    // Initialize signals
+    clk = 1'b0;
+    rst = 1'b1;
+
+    #20 rst = 1'b0; 
+    #1200 rst = 1'b1; 
+  end
+
+  initial begin
+    $monitor("Time: %0t | Hour: %0d | Min: %0d | Sec: %0d", $time, hour, min, sec);
+  end
+endmodule
+
+
