@@ -68,3 +68,23 @@ end
 endmodule
 
 //Testbench
+module tb_Traffic_controller();
+reg clk,rst;
+wire [1:0]main,side;
+
+Traffic_controller dut(clk,rst,main,side); //instantiation
+
+always #5 clk = ~clk;
+
+initial begin
+
+clk = 0;
+
+$monitor("Time = %0t | Main Light = %0b | Side Light = %0b",$time,main,side);
+rst = 1;
+#10
+rst =0;
+#100 $stop();
+end
+endmodule
+
