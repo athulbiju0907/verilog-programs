@@ -1,0 +1,58 @@
+module peoplecount(input clk,rst,enter,exit,output reg [5:0]q,output reg [6:0]pcnt);
+
+reg [35:0]cnt;
+wire fpulse;
+always @(posedge clk or posedge rst)
+begin
+if(rst) begin
+cnt<=36'b0;
+end
+else if(cnt== 249999999) begin
+cnt<=36'b0;
+end
+else
+cnt<=cnt+1;
+end
+assign fpulse=(cnt==249999999)?1'b1:1'b0;
+
+always @(posedge fpulse or posedge rst)
+begin
+if(rst) begin
+q<=6'b0;
+pcnt<=7'b0;
+end
+else if(enter && exit)
+q<=q;
+else if(enter) begin
+q<=q+1;
+pcnt<=pcnt+1;
+end
+else if(exit)
+q<=q-1; 
+else
+q<=q;
+end
+endmodule
+
+//Testbench
+
+module tb_peoplecount();
+reg clk,rst,enter,exit;
+wire [5:0]q;
+wire [6:0]pcnt;
+
+peoplecount p(clk,rst,enter,exit,q,pcnt);
+
+always #10 clk=~clk;
+
+initial begin
+
+clk=1'b0; rst=1'b1; enter=1'b1;
+#20 rst=1'b0;
+#50 exit=1'b1;
+#30 exit=1'b0;
+#100 $stop();
+
+end
+endmodule
+
